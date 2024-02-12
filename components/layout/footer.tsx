@@ -1,28 +1,53 @@
-import { BuyMeACoffee } from "../shared/icons";
+import { BarChart, Bike, Home, HomeIcon } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
-export default function Footer() {
+const footerItem = [
+  {
+    icon: <Home />,
+    text: "ホーム",
+    path: "/",
+  },
+  {
+    icon: <Bike />,
+    text: "サイクリング",
+    path: "/cycling",
+  },
+];
+
+type Props = {
+  path: string;
+};
+
+export default function Footer({ path }: Props) {
+  console.log(path);
   return (
-    <div className="absolute w-full py-5 text-center">
-      <p className="text-gray-500">
-        A project by{" "}
-        <a
-          className="font-semibold text-gray-600 underline-offset-4 transition-colors hover:underline"
-          href="https://twitter.com/steventey"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Steven Tey
-        </a>
-      </p>
-      <a
-        href="https://www.buymeacoffee.com/steventey"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mx-auto mt-2 flex max-w-fit items-center justify-center space-x-2 rounded-lg border border-gray-200 bg-white px-6 py-2 transition-all duration-75 hover:scale-105"
-      >
-        <BuyMeACoffee className="h-6 w-6" />
-        <p className="font-medium text-gray-600">Buy me a coffee</p>
-      </a>
+    <div className="fixed bottom-0 flex w-full items-center justify-center gap-20 border-t-2 border-gray-200 bg-white px-10">
+      {footerItem.map((item) => {
+        const isLocated = path === item.path;
+        return (
+          <Link
+            key={item.path}
+            href={item.path}
+            className={`
+              my-0.5 flex w-[80px] flex-col items-center justify-center rounded-md py-1 ${
+                isLocated ? "bg-gray-200" : ""
+              }
+            `}
+          >
+            {item.icon}
+            <p
+              className={`
+              ${isLocated ? "font-bold text-black" : "text-gray-500"}
+              mt-1
+              text-xs              
+            `}
+            >
+              {item.text}
+            </p>
+          </Link>
+        );
+      })}
     </div>
   );
 }

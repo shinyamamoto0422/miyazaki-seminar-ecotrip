@@ -58,6 +58,9 @@ module.exports = {
           "100%": { opacity: 1, transform: "translateY(0)" },
         },
       },
+      backgroundImage: {
+        nature: "url('/public/nature.png')",
+      },
     },
   },
   plugins: [

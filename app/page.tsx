@@ -27,10 +27,6 @@ const Point = () => {
           <p className="font-mono text-lg text-gray-400">km</p>
         </div>
         <div className="flex flex-col">
-          <p className="font-mono text-xl font-bold">2’01”</p>
-          <p className="font-mono text-lg text-gray-400">平均ペース</p>
-        </div>
-        <div className="flex flex-col">
           <p className="font-mono text-xl font-bold">37’27”</p>
           <p className="font-mono text-lg text-gray-400">時間</p>
         </div>

@@ -1,6 +1,5 @@
 "use client";
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Map, Marker } from "react-map-gl";
@@ -18,6 +17,7 @@ export default function Cycling() {
   const [isGetLocation, setIsGetLocation] = useState(false);
   const [currentZoom, setCurrentZoom] = useState(18);
   const [started, setStarted] = useState(false);
+  const [countTime, setCountTime] = useState(0);
 
   const getCurrentPosition = (): Promise<{ lat: number; lng: number }> => {
     return new Promise<{ lat: number; lng: number }>((resolve, reject) => {
@@ -59,6 +59,31 @@ export default function Cycling() {
     };
   }, []);
 
+  const timerIdRef = useRef<number | NodeJS.Timeout | null>(null);
+
+  const timer = () => {
+    return setInterval(() => {
+      setCountTime((prev) => prev + 1);
+    }, 1000);
+  };
+
+  const handleStart = () => {
+    // 既存のタイマーをクリアする
+    clearInterval(timerIdRef.current as number);
+    // タイマーをスタートする
+    const id = timer();
+    timerIdRef.current = id;
+    setStarted(true);
+  };
+
+  const handleEnd = () => {
+    // タイマーをストップする
+    clearInterval(timerIdRef.current as number);
+    setStarted(false);
+    setCurrentZoom(18);
+    setCountTime(0);
+  };
+
   return (
     <div className="relative h-full">
       {isGetLocation && (
@@ -87,10 +112,15 @@ export default function Cycling() {
                 filter: started
                   ? "drop-shadow(0 0 10px rgba(0, 0, 0, 0.5))"
                   : "drop-shadow(0 0 10px rgba(255, 255, 255, 0.5))",
+                animation: started ? "pulse 1.5s infinite" : "",
               }}
             >
-              <div className="rounded-full bg-sky-600 p-1.5">
-                <BikeIcon size={32} color="#fff" />
+              <div
+                className={`
+                rounded-full p-1.5 ${started ? "bg-gray-900" : "bg-transparent"}
+              `}
+              >
+                <BikeIcon size={32} color={started ? "white" : "black"} />
               </div>
             </Marker>
           )}
@@ -113,48 +143,44 @@ export default function Cycling() {
         </Map>
       )}
 
-      {!started && (
-        <div className="absolute bottom-20 z-50 flex w-full items-center justify-center">
-          <button
-            className="h-32 w-32 rounded-full bg-slate-950 px-4 py-2 font-mono text-2xl font-bold text-white shadow-xl"
-            onClick={() => setStarted(true)}
-          >
-            スタート
-          </button>
-        </div>
-      )}
-      {started && (
+      {isGetLocation ? (
         <div>
-          <div className="absolute bottom-16 left-1 z-50">
-            <div className="rounded-md border border-gray-200 bg-gray-50 bg-opacity-85 p-2">
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center">
-                  <p className="font-mono text-sm font-bold">18.54</p>
-                  <p className="font-mono text-xs text-gray-400">km</p>
-                </div>
-                <div className="flex items-center">
-                  <p className="text-md font-mono font-bold">2’01”</p>
-                  <p className="font-mono text-xs text-gray-400">平均ペース</p>
-                </div>
-                <div className="flex items-center">
-                  <p className="text-md font-mono font-bold">37’27”</p>
-                  <p className="font-mono text-xs text-gray-400">時間</p>
+          {!started && (
+            <div className="absolute bottom-16 z-50 flex w-full items-center justify-center">
+              <button
+                className="h-32 w-32 rounded-full bg-slate-950 px-4 py-2 font-mono text-2xl font-bold text-white shadow-2xl"
+                onClick={handleStart}
+              >
+                スタート
+              </button>
+            </div>
+          )}
+          {started && (
+            <div>
+              <div className="absolute bottom-16 left-1 z-50">
+                <div className="rounded-md border border-gray-200 bg-gray-50 bg-opacity-85 p-2">
+                  <div className="flex flex-col items-center gap-1">
+                    <p className="font-mono text-5xl font-extrabold italic">
+                      {String(Math.floor(countTime / 60)).padStart(2, "0")}:
+                      {String(countTime % 60).padStart(2, "0")}
+                    </p>
+                    <p className="font-mono text-lg text-gray-400">時間</p>
+                  </div>
                 </div>
               </div>
+              <div className="absolute bottom-16 right-2 z-50 flex w-full justify-end">
+                <button
+                  className="rounded-full bg-red-600 px-6 py-4 font-mono text-2xl font-bold text-white shadow-lg"
+                  onClick={handleEnd}
+                >
+                  終了
+                </button>
+              </div>
             </div>
-          </div>
-          <div className="absolute bottom-16 right-2 z-50 flex w-full justify-end">
-            <button
-              className="rounded-full bg-red-600 px-6 py-4 font-mono text-2xl font-bold text-white shadow-lg"
-              onClick={() => {
-                setStarted(false);
-                setCurrentZoom(18);
-              }}
-            >
-              終了
-            </button>
-          </div>
+          )}
         </div>
+      ) : (
+        <div className="flex h-screen animate-pulse items-center justify-center"></div>
       )}
     </div>
   );

@@ -19,6 +19,8 @@ export default function Cycling() {
   const [started, setStarted] = useState(false);
   const [countTime, setCountTime] = useState(0);
 
+  const timerIdRef = useRef<number | NodeJS.Timeout | null>(null);
+
   const getCurrentPosition = (): Promise<{ lat: number; lng: number }> => {
     return new Promise<{ lat: number; lng: number }>((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(
@@ -58,8 +60,6 @@ export default function Cycling() {
       navigator.geolocation.clearWatch(watchId);
     };
   }, []);
-
-  const timerIdRef = useRef<number | NodeJS.Timeout | null>(null);
 
   const timer = () => {
     return setInterval(() => {

@@ -13,11 +13,6 @@ const footerItem = [
     text: "サイクリング",
     path: "/cycling",
   },
-  {
-    icon: <Bike />,
-    text: "サイクリング2",
-    path: "/cycling2",
-  },
 ];
 
 type Props = {

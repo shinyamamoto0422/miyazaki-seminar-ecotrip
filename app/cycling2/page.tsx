@@ -12,11 +12,10 @@ const defaultPosition = { lng: 139.7673068, lat: 35.6809591 };
 export default function Cycling() {
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ?? "";
 
-  const { myMap } = useMap();
-
   const [currentUserPosition, setCurrentUserPosition] =
     useState<LatLng>(defaultPosition);
   const [isGetLocation, setIsGetLocation] = useState(false);
+  const [isTracking, setIsTracking] = useState(false);
 
   const getCurrentPosition = (): Promise<{ lat: number; lng: number }> => {
     return new Promise<{ lat: number; lng: number }>((resolve, reject) => {
@@ -40,6 +39,24 @@ export default function Cycling() {
       .catch(setCurrentUserPosition);
   }, []);
 
+  useEffect(() => {
+    const watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setCurrentUserPosition({ lat: latitude, lng: longitude });
+        setIsGetLocation(true);
+      },
+      (error) => {
+        setCurrentUserPosition(defaultPosition);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
+    );
+
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+    };
+  }, []);
+
   return (
     <div className="h-full">
       {isGetLocation && (
@@ -48,7 +65,7 @@ export default function Cycling() {
           initialViewState={{
             longitude: currentUserPosition.lng,
             latitude: currentUserPosition.lat,
-            zoom: 16,
+            zoom: 18,
           }}
           localFontFamily="Inter"
           style={{ width: "100%", height: "100vh" }}

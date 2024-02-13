@@ -16,6 +16,7 @@ export default function Cycling() {
   const [currentUserPosition, setCurrentUserPosition] =
     useState<LatLng>(defaultPosition);
   const [isGetLocation, setIsGetLocation] = useState(false);
+  const [currentZoom, setCurrentZoom] = useState(18);
 
   const getCurrentPosition = (): Promise<{ lat: number; lng: number }> => {
     return new Promise<{ lat: number; lng: number }>((resolve, reject) => {
@@ -57,8 +58,6 @@ export default function Cycling() {
     };
   }, []);
 
-  console.log("waterData", waterData);
-
   return (
     <div className="h-full">
       {isGetLocation && (
@@ -67,7 +66,10 @@ export default function Cycling() {
           initialViewState={{
             longitude: currentUserPosition.lng,
             latitude: currentUserPosition.lat,
-            zoom: 18,
+            zoom: currentZoom,
+          }}
+          onZoom={(e) => {
+            setCurrentZoom(e.viewState.zoom);
           }}
           localFontFamily="Inter"
           style={{ width: "100%", height: "100vh" }}
@@ -84,21 +86,20 @@ export default function Cycling() {
               <BikeIcon size={40} />
             </Marker>
           )}
-          {
-            // 京都府をmapで見た時に、conversionWater()を実行して、その情報をmapに表示する
+          {currentZoom > 11.5 &&
             waterData.map((item) => {
               return (
-                <Marker
-                  key={item.title}
-                  longitude={item.lng}
-                  latitude={item.lat}
-                  anchor="center"
-                >
-                  <GlassWater size={40} />
-                </Marker>
+                <div key={item.title}>
+                  <Marker
+                    longitude={item.lng}
+                    latitude={item.lat}
+                    anchor="center"
+                  >
+                    <GlassWater size={24} />
+                  </Marker>
+                </div>
               );
-            })
-          }
+            })}
         </Map>
       )}
     </div>

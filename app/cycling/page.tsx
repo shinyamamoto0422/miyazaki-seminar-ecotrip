@@ -17,6 +17,7 @@ export default function Cycling() {
     useState<LatLng>(defaultPosition);
   const [isGetLocation, setIsGetLocation] = useState(false);
   const [currentZoom, setCurrentZoom] = useState(18);
+  const [started, setStarted] = useState(false);
 
   const getCurrentPosition = (): Promise<{ lat: number; lng: number }> => {
     return new Promise<{ lat: number; lng: number }>((resolve, reject) => {
@@ -82,11 +83,18 @@ export default function Cycling() {
               longitude={currentUserPosition.lng}
               latitude={currentUserPosition.lat}
               anchor="center"
+              style={{
+                filter: started
+                  ? "drop-shadow(0 0 10px rgba(0, 0, 0, 0.5))"
+                  : "drop-shadow(0 0 10px rgba(255, 255, 255, 0.5))",
+              }}
             >
-              <BikeIcon size={40} />
+              <div className="rounded-full bg-sky-600 p-1.5">
+                <BikeIcon size={32} color="#fff" />
+              </div>
             </Marker>
           )}
-          {currentZoom > 11.5 &&
+          {currentZoom > 10 &&
             waterData.map((item) => {
               return (
                 <div key={item.title}>
@@ -95,12 +103,58 @@ export default function Cycling() {
                     latitude={item.lat}
                     anchor="center"
                   >
-                    <GlassWater size={24} />
+                    <GlassWater
+                      size={currentZoom > 14 ? 48 : currentZoom > 13 ? 30 : 18}
+                    />
                   </Marker>
                 </div>
               );
             })}
         </Map>
+      )}
+
+      {!started && (
+        <div className="absolute bottom-20 z-50 flex w-full items-center justify-center">
+          <button
+            className="h-32 w-32 rounded-full bg-slate-950 px-4 py-2 font-mono text-2xl font-bold text-white shadow-xl"
+            onClick={() => setStarted(true)}
+          >
+            スタート
+          </button>
+        </div>
+      )}
+      {started && (
+        <div>
+          <div className="absolute bottom-16 left-1 z-50">
+            <div className="rounded-md border border-gray-200 bg-gray-50 bg-opacity-85 p-2">
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center">
+                  <p className="font-mono text-sm font-bold">18.54</p>
+                  <p className="font-mono text-xs text-gray-400">km</p>
+                </div>
+                <div className="flex items-center">
+                  <p className="text-md font-mono font-bold">2’01”</p>
+                  <p className="font-mono text-xs text-gray-400">平均ペース</p>
+                </div>
+                <div className="flex items-center">
+                  <p className="text-md font-mono font-bold">37’27”</p>
+                  <p className="font-mono text-xs text-gray-400">時間</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="absolute bottom-16 right-2 z-50 flex w-full justify-end">
+            <button
+              className="rounded-full bg-red-600 px-6 py-4 font-mono text-2xl font-bold text-white shadow-lg"
+              onClick={() => {
+                setStarted(false);
+                setCurrentZoom(18);
+              }}
+            >
+              終了
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

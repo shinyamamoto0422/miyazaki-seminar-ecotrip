@@ -5,7 +5,7 @@ import { Analytics } from "@vercel/analytics/react";
 import cx from "classnames";
 import { sfPro, inter } from "./fonts";
 import Footer from "@/components/layout/footer";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 export default function RootLayout({
   children,

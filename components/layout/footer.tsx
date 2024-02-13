@@ -13,6 +13,11 @@ const footerItem = [
     text: "サイクリング",
     path: "/cycling",
   },
+  {
+    icon: <Bike />,
+    text: "サイクリング2",
+    path: "/cycling2",
+  },
 ];
 
 type Props = {
@@ -20,7 +25,6 @@ type Props = {
 };
 
 export default function Footer({ path }: Props) {
-  console.log(path);
   return (
     <div className="fixed bottom-0 z-50 flex w-full items-center justify-center gap-20 border-t-2 border-gray-200 bg-white px-10">
       {footerItem.map((item) => {

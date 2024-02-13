@@ -1,8 +1,6 @@
 import { useEffect } from "react";
 import MapboxLanguage from "@mapbox/mapbox-gl-language";
 import mapboxgl from "mapbox-gl";
-import Map, { Marker } from "react-map-gl";
-import { Pin } from "lucide-react";
 
 type Props = {
   mapContainer: any;
@@ -29,7 +27,6 @@ export const CustomMap = ({
         (position) => {
           setLatitude(position.coords.latitude);
           setLongitude(position.coords.longitude);
-          console.log(latitude, longitude);
         },
         (error) => {
           console.error(error);

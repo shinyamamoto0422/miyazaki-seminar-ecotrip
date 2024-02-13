@@ -1,6 +1,5 @@
-import { BarChart, Bike, Home, HomeIcon } from "lucide-react";
+import { Bike, Home } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 const footerItem = [
   {

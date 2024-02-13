@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { Map, Marker, useMap } from "react-map-gl";
+import { Map, Marker } from "react-map-gl";
 import { LatLng } from "types/LatLng";
-import { BikeIcon, Pin } from "lucide-react";
+import { BikeIcon, GlassWater } from "lucide-react";
+import { waterData } from "@/lib/waterData";
 
 const defaultPosition = { lng: 139.7673068, lat: 35.6809591 };
 
@@ -15,7 +16,6 @@ export default function Cycling() {
   const [currentUserPosition, setCurrentUserPosition] =
     useState<LatLng>(defaultPosition);
   const [isGetLocation, setIsGetLocation] = useState(false);
-  const [isTracking, setIsTracking] = useState(false);
 
   const getCurrentPosition = (): Promise<{ lat: number; lng: number }> => {
     return new Promise<{ lat: number; lng: number }>((resolve, reject) => {
@@ -57,6 +57,8 @@ export default function Cycling() {
     };
   }, []);
 
+  console.log("waterData", waterData);
+
   return (
     <div className="h-full">
       {isGetLocation && (
@@ -82,6 +84,21 @@ export default function Cycling() {
               <BikeIcon size={40} />
             </Marker>
           )}
+          {
+            // 京都府をmapで見た時に、conversionWater()を実行して、その情報をmapに表示する
+            waterData.map((item) => {
+              return (
+                <Marker
+                  key={item.title}
+                  longitude={item.lng}
+                  latitude={item.lat}
+                  anchor="center"
+                >
+                  <GlassWater size={40} />
+                </Marker>
+              );
+            })
+          }
         </Map>
       )}
     </div>

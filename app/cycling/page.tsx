@@ -59,7 +59,7 @@ export default function Cycling() {
   }, []);
 
   return (
-    <div className="h-full">
+    <div className="relative h-full">
       {isGetLocation && (
         <Map
           id="myMap"

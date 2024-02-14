@@ -43,6 +43,7 @@ export default function Cycling() {
       .catch(setCurrentUserPosition);
   }, []);
 
+  // 3秒ごとに位置情報を取得する
   useEffect(() => {
     const watchId = navigator.geolocation.watchPosition(
       (position) => {

@@ -20,7 +20,7 @@ type Props = {
 
 export default function Footer({ path }: Props) {
   return (
-    <div className="fixed bottom-0 z-50 flex w-full max-w-screen-sm items-center justify-center gap-20 border-l-2 border-r-2 border-gray-50 bg-gray-100 px-10">
+    <div className="fixed bottom-0 z-50 flex h-[8%] w-full max-w-screen-sm items-center justify-center gap-20 border-l-2 border-r-2 border-gray-50 bg-gray-100 px-10">
       {footerItem.map((item) => {
         const isLocated = path === item.path;
         return (

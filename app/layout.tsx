@@ -22,8 +22,10 @@ export default function RootLayout({
           {pathName === "/" && (
             <div className="fixed z-[-1] h-screen w-full max-w-screen-sm bg-[url('/nature.png')] bg-cover bg-center" />
           )}
-          <main className="flex w-full flex-col p-2">{children}</main>
+          <main className="flex h-[92%] w-full flex-col p-2">{children}</main>
+
           <Footer path={pathName as string} />
+
           <Analytics />
         </div>
       </body>
